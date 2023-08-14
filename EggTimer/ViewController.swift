@@ -11,32 +11,45 @@
 import UIKit
 
 class ViewController: UIViewController {
-// MARK: - PROPERTIES
-    let eggTimes = ["Soft": 300, "Medium": 42, "Hard": 720] // time in seconds
-    var secondsRemaining = 60
+    // MARK: - IBOutlets
+    @IBOutlet var textBox: UILabel!
+    @IBOutlet var progressBar: UIProgressView!
+    
+    // MARK: - PROPERTIES
+    let eggTimes = ["Soft": 3.0, "Medium": 420.0, "Hard": 720.0] // time in seconds
+    var totalTime: Double = 0.0
+    var secondsPassed: Double = 0.0
     var timer = Timer()
-
-// MARK: - IBACTIONS
+    
+    // MARK: - IBACTIONS
     @IBAction func hardnessSelected(_ sender: UIButton) {
         timer.invalidate() // ensures the timer stops before starting a new one
-        
+        textBox.text = "How do you like your eggs?"
         let hardness = sender.currentTitle!
+        totalTime = eggTimes[hardness]!
         
-        secondsRemaining = eggTimes[hardness]!
+        // reset UI
+        progressBar.progress = 0.0
+        secondsPassed = 0.0
+        textBox.text = hardness
         
         timer = Timer.scheduledTimer(
-                        timeInterval: 1.0, // in seconds
-                        target: self,
-                        selector: #selector(updateTimer),
-                        userInfo: nil,
-                        repeats: true
-                )
+            timeInterval: 1.0, // in seconds
+            target: self,
+            selector: #selector(updateTimer),
+            userInfo: nil,
+            repeats: true
+        )
     }
     
     @objc func updateTimer() {
-        if secondsRemaining > 0 {
-            print("\(secondsRemaining) seconds.")
-            secondsRemaining -= 1
+        if secondsPassed <= totalTime {
+            let percentageProgress = secondsPassed / totalTime
+            progressBar.progress = Float(percentageProgress)
+            secondsPassed += 1
+        } else {
+            timer.invalidate()
+            textBox.text = "DONE!"
         }
     }
     
