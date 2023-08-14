@@ -28,11 +28,13 @@ class ViewController: UIViewController {
 
         // Do any additional setup after loading the view.
         progressBar.progress = 0.0
+        progressBar.isHidden = true
     }
     
     // MARK: - IBACTIONS
     @IBAction func hardnessSelected(_ sender: UIButton) {
         timer.invalidate() // ensures the timer stops before starting a new one
+        progressBar.isHidden = false
         textBox.text = "How do you like your eggs?"
         let hardness = sender.currentTitle!
         totalTime = eggTimes[hardness]!
